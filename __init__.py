@@ -1,22 +1,7 @@
 """
-Models Package Initialization
-=============================
-Exports all SQLAlchemy ORM models for easy import across routes, services, and tests.
+Database Package Initialization
 """
 
-from models.user import User
-from models.resume import Resume
-from models.skill import Skill
-from models.job import Job, JobSkill
-from models.recommendation import Recommendation
-from models.learning_resource import LearningResource
+from database.connection import db, init_db
 
-__all__ = [
-    "User",
-    "Resume",
-    "Skill",
-    "Job",
-    "JobSkill",
-    "Recommendation",
-    "LearningResource",
-]
+__all__ = ["db", "init_db"]
