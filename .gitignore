@@ -1,0 +1,26 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Database & Uploads
+*.db
+uploads/user_*
+uploads/*.pdf
+uploads/*.docx
+uploads/*.txt
+!uploads/.gitkeep
+
+# Environment variables
+.env
+.env.local
+
+# IDE Configs
+.vscode/
+.idea/
