@@ -1,0 +1,126 @@
+/* ==============================================================================
+   AI-Powered Resume Analyzer & Career Recommender
+   Custom Styling & Theme (Inter & Outfit typography, modern cards, gradients)
+   ============================================================================== */
+
+:root {
+    --bs-font-sans-serif: 'Inter', system-ui, -apple-system, sans-serif;
+    --bs-primary: #3b82f6;
+    --bs-primary-rgb: 59, 130, 246;
+    --bs-dark: #0f172a;
+    --card-border-radius: 1rem;
+}
+
+body {
+    font-family: var(--bs-font-sans-serif);
+    color: #1e293b;
+    background-color: #f8fafc !important;
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+    font-family: 'Outfit', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    position: relative;
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-radial: radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.15), transparent 40%);
+    pointer-events: none;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #60a5fa 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.max-w-500 { max-width: 500px; }
+.max-w-600 { max-width: 600px; }
+.max-w-200 { max-width: 200px; }
+
+/* Cards & Hover Effects */
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.step-card:hover, .job-card:hover, .recommendation-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.1) !important;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Upload Dropzone */
+.upload-dropzone {
+    border: 2px dashed #cbd5e1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.upload-dropzone:hover {
+    border-color: #3b82f6;
+    background-color: #eff6ff !important;
+}
+
+.file-input-hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Custom Badges */
+.bg-purple {
+    background-color: #8b5cf6 !important;
+    color: #ffffff !important;
+}
+
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+@media (min-width: 992px) {
+    .border-end-lg {
+        border-right: 1px solid #e2e8f0;
+    }
+}
