@@ -1,0 +1,32 @@
+ARAVIND M
+Email: aravind.m@example.com | Phone: +91 9876543210
+Location: Bangalore, India | LinkedIn: linkedin.com/in/aravind-dev | GitHub: github.com/aravind-dev
+
+PROFESSIONAL SUMMARY
+Passionate Software Engineer with 2 years of experience in backend development, REST API design, and database optimization. Adept at building scalable web applications with Python, Flask, MySQL, and Docker.
+
+TECHNICAL SKILLS
+- Programming Languages: Python, Java, SQL, HTML, CSS
+- Frameworks & Libraries: Flask, Django, REST API, Bootstrap
+- Databases: MySQL, PostgreSQL, Redis
+- Tools & Cloud: Git, GitHub, Docker, Postman, Linux
+- Domain Competencies: Data Structures, Algorithms, Object-Oriented Programming, Microservices
+- Soft Skills: Problem Solving, Teamwork, Communication, Agile
+
+EDUCATION
+- Bachelor of Engineering (B.E.) in Computer Science & Engineering, Anna University, CGPA: 8.7 (2020 - 2024)
+- Higher Secondary Certificate (HSC), State Board, 92% (2020)
+
+WORK EXPERIENCE
+Backend Developer Intern | CloudScale Solutions | July 2023 - Present
+- Developed high-performance RESTful APIs using Python Flask and MySQL.
+- Containerized microservices using Docker and integrated CI/CD pipelines.
+- Optimized SQL database queries, improving endpoint response time by 35%.
+
+ACADEMIC PROJECTS
+1. AI Resume Scanner & Matcher: Built a web system using Python, Flask, and TF-IDF to compare candidate resumes with job postings.
+2. E-Commerce Inventory Service: Created a distributed catalog service using Flask, MySQL, and Redis caching.
+
+CERTIFICATIONS
+- Python for Everybody Specialization - Coursera
+- Relational Database Certification - freeCodeCamp

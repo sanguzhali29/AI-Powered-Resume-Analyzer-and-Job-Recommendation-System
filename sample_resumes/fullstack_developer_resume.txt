@@ -1,0 +1,26 @@
+DIVYA SHARMA
+Email: divya.s@example.com | Phone: 9876501234
+LinkedIn: linkedin.com/in/divya-sharma | GitHub: github.com/divya-sharma
+
+OBJECTIVE
+Motivated Full Stack Web Developer proficient in React, JavaScript, Node.js, and modern UI engineering seeking to build responsive applications.
+
+CORE SKILLS
+- Languages: JavaScript, TypeScript, HTML, CSS, SQL
+- Frontend: React, Redux, Bootstrap, Tailwind CSS, Next.js
+- Backend: Node.js, Express, REST API
+- Databases: MongoDB, MySQL
+- Tools: Git, GitHub, Postman, Linux
+- Soft Skills: Teamwork, Problem Solving, Communication, Time Management
+
+EDUCATION
+- Bachelor of Technology (B.Tech) in Information Technology, VTU, 8.5 CGPA (2020 - 2024)
+
+EXPERIENCE
+Full Stack Developer Trainee | WebMatrix Technologies | Aug 2023 - Present
+- Built modern single-page applications in React and integrated backend REST endpoints.
+- Designed database schemas in MongoDB and MySQL.
+
+PROJECTS
+1. Interactive Learning Portal: Built with React, Node.js, Express, and MongoDB.
+2. Real-Time Task Tracker: Implemented using React, Tailwind CSS, and REST APIs.

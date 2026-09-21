@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block title %}AI-Powered Resume Analyzer & Job Recommendation System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-white py-5 position-relative overflow-hidden">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-7 text-center text-lg-start mb-5 mb-lg-0">
+                <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-2 rounded-pill fw-semibold mb-3">
+                    <i class="bi bi-stars me-1"></i> B.E. CSE Final Year Academic Project
+                </span>
+                <h1 class="display-4 fw-extrabold mb-3 lh-sm">
+                    AI-Powered Resume Analyzer & <span class="text-gradient">Career Recommender</span>
+                </h1>
+                <p class="lead text-light-50 mb-4">
+                    Bridge the gap between your resume and your dream tech job. Extract technical proficiencies via NLP, match against real industry profiles using <strong>TF-IDF & Cosine Similarity</strong>, identify skill gaps, and access free learning roadmaps.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    {% if g.user %}
+                        <a href="{{ url_for('resume.upload_resume') }}" class="btn btn-primary btn-lg px-4 py-3 shadow">
+                            <i class="bi bi-cloud-arrow-up me-2"></i> Upload & Scan Resume
+                        </a>
+                        <a href="{{ url_for('dashboard.user_dashboard') }}" class="btn btn-outline-light btn-lg px-4 py-3">
+                            <i class="bi bi-grid me-2"></i> My Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg px-4 py-3 shadow">
+                            <i class="bi bi-lightning-charge me-2"></i> Get Started Free
+                        </a>
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg px-4 py-3">
+                            <i class="bi bi-box-arrow-in-right me-2"></i> Try Demo Login
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Metrics Highlights -->
+                <div class="row mt-5 pt-3 g-3 border-top border-secondary text-center text-lg-start">
+                    <div class="col-4">
+                        <h3 class="fw-bold mb-0 text-white">{{ total_jobs }}+</h3>
+                        <small class="text-white-50">Active Tech Roles</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="fw-bold mb-0 text-white">{{ total_skills }}+</h3>
+                        <small class="text-white-50">Master Skills</small>
+                    </div>
+                    <div class="col-4">
+                        <h3 class="fw-bold mb-0 text-white">100%</h3>
+                        <small class="text-white-50">Free Open-Source</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Feature Card -->
+            <div class="col-lg-5">
+                <div class="card bg-dark text-white border-secondary shadow-lg p-4 rounded-4 position-relative">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h5 class="fw-bold mb-0"><i class="bi bi-robot text-primary me-2"></i> AI Matching Engine</h5>
+                        <span class="badge bg-success">Live & Explainable</span>
+                    </div>
+                    
+                    <div class="bg-black bg-opacity-50 p-3 rounded-3 mb-3 font-monospace small border border-secondary">
+                        <span class="text-info">>> Parsing:</span> PDF / DOCX / TXT<br>
+                        <span class="text-warning">>> NLP Extractor:</span> 6 Skill Categories<br>
+                        <span class="text-success">>> ML Algorithm:</span> TF-IDF + Cosine Sim.<br>
+                        <span class="text-primary">>> Output:</span> Match % + Skill Gap Roadmap
+                    </div>
+
+                    <div class="p-3 bg-secondary bg-opacity-25 rounded-3 mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small fw-semibold">Sample Match: Python Backend Developer</span>
+                            <span class="badge bg-primary">88.5% Match</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-primary" role="progressbar" style="width: 88.5%"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <a href="{{ url_for('job.list_jobs') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-search me-1"></i> Browse Job Roles Catalog
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-white">
+    <div class="container py-4">
+        <div class="text-center mb-5">
+            <span class="text-primary fw-bold text-uppercase small tracking-wide">Step-by-Step Architecture</span>
+            <h2 class="fw-bold mt-1">How the AI Engine Works</h2>
+            <p class="text-muted max-w-600 mx-auto">From unstructured file uploads to mathematical cosine matching and personalized learning paths.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center step-card">
+                    <div class="step-icon bg-primary-subtle text-primary mx-auto mb-3">
+                        <i class="bi bi-file-earmark-arrow-up fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">1. Multi-Format Upload</h5>
+                    <p class="text-muted small">Upload your resume in PDF, DOCX, or TXT format. PyPDF2 and python-docx parse raw plain text.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center step-card">
+                    <div class="step-icon bg-info-subtle text-info mx-auto mb-3">
+                        <i class="bi bi-cpu fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">2. NLP Skill Extraction</h5>
+                    <p class="text-muted small">Extract technical skills, tools, frameworks, education, and experience using word-boundary NLP matching.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center step-card">
+                    <div class="step-icon bg-success-subtle text-success mx-auto mb-3">
+                        <i class="bi bi-graph-up-arrow fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">3. TF-IDF & Cosine Sim.</h5>
+                    <p class="text-muted small">Vectorize texts using Scikit-Learn TF-IDF, compute cosine similarity angles, and rank job recommendations.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0 shadow-sm p-4 text-center step-card">
+                    <div class="step-icon bg-warning-subtle text-warning mx-auto mb-3">
+                        <i class="bi bi-mortarboard fs-3"></i>
+                    </div>
+                    <h5 class="fw-bold">4. Skill Gap & Free Courses</h5>
+                    <p class="text-muted small">Identify missing skills for target roles and access free course roadmaps from YouTube, freeCodeCamp, and W3Schools.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Job Roles -->
+<section class="py-5 bg-light border-top">
+    <div class="container py-4">
+        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+            <div>
+                <span class="text-primary fw-bold text-uppercase small">Available Benchmarks</span>
+                <h2 class="fw-bold mb-0">Featured Job Profiles</h2>
+            </div>
+            <a href="{{ url_for('job.list_jobs') }}" class="btn btn-outline-primary mt-2 mt-md-0">
+                View All {{ total_jobs }} Jobs <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            {% for job in sample_jobs %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm p-3 job-card">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-light text-dark border">{{ job.industry }}</span>
+                            <span class="badge bg-success-subtle text-success fw-semibold">{{ job.salary_range }}</span>
+                        </div>
+                        <h5 class="fw-bold mb-1 text-dark">{{ job.title }}</h5>
+                        <p class="text-muted small mb-3"><i class="bi bi-building me-1"></i> {{ job.company }} &bull; {{ job.experience_level }}</p>
+                        
+                        <div class="mb-3">
+                            <small class="text-muted fw-semibold d-block mb-1">Required Skills:</small>
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for js in job.job_skills[:4] %}
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ js.skill.skill_name }}</span>
+                                {% endfor %}
+                                {% if job.job_skills|length > 4 %}
+                                    <span class="badge bg-light text-muted">+{{ job.job_skills|length - 4 }} more</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mt-auto pt-2 border-top">
+                            <a href="{{ url_for('job.job_detail', job_id=job.job_id) }}" class="btn btn-sm btn-outline-dark w-100">
+                                View Role Requirements
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="py-5 bg-primary text-white text-center">
+    <div class="container py-4">
+        <h2 class="fw-bold mb-3">Ready to Analyze Your Resume?</h2>
+        <p class="lead text-white-50 mb-4 max-w-600 mx-auto">
+            Upload your resume now to instantly receive an ATS completeness score, ranked job matches, and a personalized learning roadmap.
+        </p>
+        <a href="{{ url_for('resume.upload_resume') if g.user else url_for('auth.register') }}" class="btn btn-light btn-lg px-5 py-3 fw-bold text-primary shadow">
+            <i class="bi bi-cloud-arrow-up me-2"></i> Start Free Scan
+        </a>
+    </div>
+</section>
+{% endblock %}

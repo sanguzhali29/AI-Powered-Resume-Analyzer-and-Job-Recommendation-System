@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Resume - AI Resume Analyzer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="brand-icon bg-primary text-white d-inline-flex p-3 rounded-circle mb-2">
+                        <i class="bi bi-cloud-arrow-up fs-3"></i>
+                    </div>
+                    <h3 class="fw-bold">Upload Your Resume</h3>
+                    <p class="text-muted small">Upload your resume to extract skills, evaluate ATS completeness, and match against tech roles.</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('resume.upload_resume') }}" enctype="multipart/form-data" id="uploadForm">
+                    <div class="mb-4">
+                        <label for="resume_title" class="form-label fw-semibold small">Resume Title / Version Name (Optional)</label>
+                        <input type="text" class="form-control" id="resume_title" name="resume_title" placeholder="e.g. Software_Developer_Resume_2026">
+                    </div>
+
+                    <!-- Drag and Drop Box -->
+                    <div class="upload-dropzone p-5 text-center rounded-4 border-2 border-dashed bg-light mb-4 position-relative" id="dropzone">
+                        <input type="file" name="resume_file" id="resume_file" class="file-input-hidden" accept=".pdf,.docx,.txt" required>
+                        <i class="bi bi-file-earmark-arrow-up display-4 text-primary mb-2 d-block"></i>
+                        <h5 class="fw-bold mb-1" id="fileLabel">Drag & drop your resume file here</h5>
+                        <p class="text-muted small mb-3">Supports <strong class="text-dark">PDF, DOCX, or TXT</strong> files (Max 16 MB)</p>
+                        <button type="button" class="btn btn-outline-primary btn-sm px-3" onclick="document.getElementById('resume_file').click()">
+                            <i class="bi bi-folder2-open me-1"></i> Browse Files
+                        </button>
+                    </div>
+
+                    <div id="fileInfo" class="alert alert-info py-2 px-3 small d-none mb-4 d-flex align-items-center justify-content-between">
+                        <span id="selectedFileName"><i class="bi bi-file-check me-1"></i> No file selected</span>
+                        <button type="button" class="btn-close btn-close-sm" onclick="clearFile()"></button>
+                    </div>
+
+                    <!-- Processing Notice -->
+                    <div class="p-3 bg-light rounded-3 border mb-4 small text-muted">
+                        <div class="d-flex align-items-start gap-2">
+                            <i class="bi bi-shield-check text-success fs-5"></i>
+                            <div>
+                                <strong class="text-dark">Privacy & Processing Guarantee:</strong>
+                                <div>Your resume is parsed locally using open-source NLP algorithms (spaCy/NLTK and Scikit-learn). No external paid APIs are called.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow" id="submitBtn">
+                        <i class="bi bi-cpu me-2"></i> Run AI Analysis & Match Jobs
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('resume_file');
+const fileInfo = document.getElementById('fileInfo');
+const selectedFileName = document.getElementById('selectedFileName');
+const fileLabel = document.getElementById('fileLabel');
+
+fileInput.addEventListener('change', handleFileSelect);
+
+['dragenter', 'dragover'].forEach(eventName => {
+    dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.add('border-primary', 'bg-white');
+    }, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    dropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('border-primary', 'bg-white');
+    }, false);
+});
+
+dropzone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    if (files.length > 0) {
+        fileInput.files = files;
+        handleFileSelect();
+    }
+});
+
+function handleFileSelect() {
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        selectedFileName.innerHTML = `<i class="bi bi-file-earmark-check-fill text-success me-1"></i> <strong>Selected:</strong> ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        fileInfo.classList.remove('d-none');
+        fileLabel.innerText = file.name;
+    }
+}
+
+function clearFile() {
+    fileInput.value = '';
+    fileInfo.classList.add('d-none');
+    fileLabel.innerText = "Drag & drop your resume file here";
+}
+</script>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Tech Job Roles - AI Resume Analyzer{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Top Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 pb-2 border-bottom">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="bi bi-briefcase text-primary me-2"></i> Technical Job Profiles</h2>
+            <p class="text-muted small mb-0">Browse benchmark job descriptions used by the AI matching engine.</p>
+        </div>
+        <div class="mt-3 mt-md-0">
+            {% if g.user and g.user.is_admin %}
+                <a href="{{ url_for('job.manage_jobs') }}" class="btn btn-primary btn-sm px-3 shadow-sm">
+                    <i class="bi bi-plus-circle me-1"></i> Add / Manage Jobs
+                </a>
+            {% elif g.user %}
+                <a href="{{ url_for('resume.upload_resume') }}" class="btn btn-primary btn-sm px-3 shadow-sm">
+                    <i class="bi bi-cloud-arrow-up me-1"></i> Scan Resume
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Search & Filter Form -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
+        <form method="GET" action="{{ url_for('job.list_jobs') }}" class="row g-2">
+            <div class="col-md-7">
+                <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control" name="q" value="{{ search_query }}" placeholder="Search by job title, skill, or keyword (e.g. Python, React, Cloud)...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="industry" class="form-select">
+                    <option value="">All Industries</option>
+                    {% for ind in industries %}
+                        <option value="{{ ind }}" {% if ind == industry_filter %}selected{% endif %}>{{ ind }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">Filter</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Job Cards Grid -->
+    <div class="row g-4">
+        {% for job in jobs %}
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4 h-100 job-card">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <span class="badge bg-light text-dark border mb-1">{{ job.industry }}</span>
+                            <h4 class="fw-bold mb-0 text-dark">{{ job.title }}</h4>
+                            <small class="text-muted"><i class="bi bi-building me-1"></i> {{ job.company }}</small>
+                        </div>
+                        <span class="badge bg-success-subtle text-success fw-bold px-3 py-2 rounded-pill">
+                            {{ job.salary_range }}
+                        </span>
+                    </div>
+
+                    <div class="row g-2 small text-muted my-2">
+                        <div class="col-6"><i class="bi bi-person-workspace me-1"></i> {{ job.experience_level }}</div>
+                        <div class="col-6"><i class="bi bi-calendar3 me-1"></i> Benchmark Role</div>
+                    </div>
+
+                    <p class="text-muted small mb-3 line-clamp-3">{{ job.description }}</p>
+
+                    <div class="mb-3">
+                        <small class="text-muted fw-semibold d-block mb-1">Required Skills:</small>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for js in job.job_skills %}
+                                <span class="badge {% if js.importance_level == 'mandatory' %}bg-primary-subtle text-primary border border-primary-subtle{% else %}bg-light text-secondary border{% endif %}">
+                                    {{ js.skill.skill_name }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mt-auto pt-3 border-top d-flex gap-2">
+                        <a href="{{ url_for('job.job_detail', job_id=job.job_id) }}" class="btn btn-outline-primary btn-sm px-3 flex-grow-1">
+                            View Full Requirements
+                        </a>
+                        {% if g.user and not g.user.is_admin %}
+                            <a href="{{ url_for('resume.upload_resume') }}" class="btn btn-primary btn-sm px-3" title="Test Resume Against This Job">
+                                <i class="bi bi-cloud-arrow-up me-1"></i> Check Fit
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-search display-4 text-muted mb-3 d-block"></i>
+                <h5 class="fw-bold text-muted">No Job Roles Found</h5>
+                <p class="text-muted small">Try searching with a different skill keyword or clear filters.</p>
+                <a href="{{ url_for('job.list_jobs') }}" class="btn btn-outline-primary btn-sm">Clear All Filters</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

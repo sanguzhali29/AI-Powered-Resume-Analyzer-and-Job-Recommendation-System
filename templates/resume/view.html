@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Resume Analysis Details - {{ resume.resume_title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb & Top Bar -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 pb-2 border-bottom">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{{ url_for('dashboard.user_dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">{{ resume.resume_title }}</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0">{{ resume.resume_title }}</h2>
+            <small class="text-muted"><i class="bi bi-clock me-1"></i> Uploaded on {{ resume.uploaded_at.strftime('%B %d, %Y at %I:%M %p') }} &bull; Format: {{ resume.file_type|upper }}</small>
+        </div>
+        <div class="d-flex gap-2 mt-3 mt-md-0">
+            <a href="{{ url_for('resume.view_results', resume_id=resume.resume_id) }}" class="btn btn-primary shadow-sm btn-sm px-3">
+                <i class="bi bi-trophy me-1"></i> View Job Recommendations
+            </a>
+            <a href="{{ url_for('resume.view_skill_gap', resume_id=resume.resume_id) }}" class="btn btn-outline-dark btn-sm px-3">
+                <i class="bi bi-bullseye me-1"></i> Skill Gap
+            </a>
+        </div>
+    </div>
+
+    <!-- ATS Completeness Score Section -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-4 text-center border-end-lg">
+                <span class="text-muted small fw-semibold text-uppercase">Overall Resume Completeness</span>
+                <div class="display-3 fw-extrabold text-success my-2">{{ score_analysis.overall_score }}<span class="fs-4 text-muted">/100</span></div>
+                <span class="badge {{ score_analysis.badge_class }} px-3 py-2 rounded-pill">{{ score_analysis.quality_level }}</span>
+            </div>
+            
+            <div class="col-lg-8">
+                <h6 class="fw-bold mb-3"><i class="bi bi-pie-chart-fill text-primary me-2"></i> Section Evaluation Breakdown:</h6>
+                <div class="row g-2 small">
+                    <div class="col-md-6">
+                        <div class="p-2 bg-light rounded border d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-person-lines-fill text-primary me-1"></i> Contact Info (Max 20)</span>
+                            <span class="fw-bold text-dark">{{ score_analysis.breakdown.contact_score }}/20</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 bg-light rounded border d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-tags text-success me-1"></i> Skills Diversity (Max 30)</span>
+                            <span class="fw-bold text-dark">{{ score_analysis.breakdown.skills_score }}/30</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 bg-light rounded border d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-mortarboard text-info me-1"></i> Education (Max 15)</span>
+                            <span class="fw-bold text-dark">{{ score_analysis.breakdown.education_score }}/15</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-2 bg-light rounded border d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-briefcase text-warning me-1"></i> Work Experience (Max 20)</span>
+                            <span class="fw-bold text-dark">{{ score_analysis.breakdown.experience_score }}/20</span>
+                        </div>
+                    </div>
+                </div>
+
+                {% if score_analysis.improvement_tips %}
+                    <div class="mt-3 p-3 bg-warning-subtle rounded-3 border border-warning-subtle">
+                        <small class="fw-bold text-warning-emphasis d-block mb-1"><i class="bi bi-lightbulb me-1"></i> Actionable Suggestions for Higher Score:</small>
+                        <ul class="mb-0 small text-warning-emphasis ps-3">
+                            {% for tip in score_analysis.improvement_tips %}
+                                <li>{{ tip }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Extracted Information Grid -->
+    <div class="row g-4 mb-4">
+        <!-- Extracted Skills -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-tags text-primary me-2"></i> Detected Skills by Category ({{ nlp_result.total_skills_count }} Total)</h5>
+                </div>
+
+                <div class="d-flex flex-column gap-3">
+                    {% for cat, skills in nlp_result.skills.items() %}
+                        {% if skills %}
+                            <div class="p-3 bg-light rounded-3 border">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold text-uppercase small text-muted">{{ cat|replace('_', ' ') }}</span>
+                                    <span class="badge bg-secondary-subtle text-dark border">{{ skills|length }} detected</span>
+                                </div>
+                                <div class="d-flex flex-wrap gap-1">
+                                    {% for s in skills %}
+                                        <span class="badge bg-{{ cat|badge_color }} px-2 py-1">{{ s }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact & Profile Metadata -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                <h5 class="fw-bold mb-3"><i class="bi bi-person-badge text-primary me-2"></i> Contact Metadata</h5>
+                
+                <ul class="list-group list-group-flush mb-4 small">
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span class="text-muted"><i class="bi bi-envelope me-1"></i> Email:</span>
+                        <span class="fw-semibold">{{ nlp_result.contact.email or 'Not detected' }}</span>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span class="text-muted"><i class="bi bi-telephone me-1"></i> Phone:</span>
+                        <span class="fw-semibold">{{ nlp_result.contact.phone or 'Not detected' }}</span>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span class="text-muted"><i class="bi bi-linkedin me-1"></i> LinkedIn:</span>
+                        <span class="fw-semibold text-truncate max-w-200">{{ nlp_result.contact.linkedin or 'Not detected' }}</span>
+                    </li>
+                    <li class="list-group-item px-0 d-flex justify-content-between">
+                        <span class="text-muted"><i class="bi bi-github me-1"></i> GitHub:</span>
+                        <span class="fw-semibold text-truncate max-w-200">{{ nlp_result.contact.github or 'Not detected' }}</span>
+                    </li>
+                </ul>
+
+                <!-- Education Detected -->
+                <h6 class="fw-bold mb-2"><i class="bi bi-mortarboard text-info me-1"></i> Education Detected:</h6>
+                {% if nlp_result.education %}
+                    <ul class="ps-3 small text-muted mb-3">
+                        {% for edu in nlp_result.education %}
+                            <li>{{ edu }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted small">No structured degree keywords detected.</p>
+                {% endif %}
+
+                <!-- Experience Summary -->
+                <h6 class="fw-bold mb-2"><i class="bi bi-briefcase text-warning me-1"></i> Experience Summary:</h6>
+                <p class="small text-muted mb-0">
+                    {% if nlp_result.experience.years_mentioned %}
+                        <strong class="text-dark">{{ nlp_result.experience.years_mentioned }} Years</strong> of experience identified.
+                    {% elif nlp_result.experience.has_experience_section %}
+                        Experience section detected with structured entries.
+                    {% else %}
+                        No explicit years of experience specified.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Extracted Plain Text Accordion -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+        <h5 class="fw-bold mb-2"><i class="bi bi-file-earmark-code text-primary me-2"></i> Raw Extracted Text</h5>
+        <p class="text-muted small mb-3">Verified plain text extracted by the file parsing module (PyPDF2 / python-docx).</p>
+        <div class="p-3 bg-light rounded-3 border font-monospace small" style="max-height: 250px; overflow-y: auto; white-space: pre-wrap;">
+{{ resume.extracted_text }}
+        </div>
+    </div>
+</div>
+{% endblock %}

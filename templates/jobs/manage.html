@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Job Postings - Administrator Portal{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 pb-2 border-bottom">
+        <div>
+            <span class="badge bg-danger mb-1"><i class="bi bi-shield-lock me-1"></i> Admin Portal</span>
+            <h2 class="fw-bold mb-1">Job Postings Management</h2>
+            <p class="text-muted small mb-0">Create and curate benchmark job descriptions and required skills.</p>
+        </div>
+        <div>
+            <a href="{{ url_for('dashboard.admin_dashboard') }}" class="btn btn-outline-secondary btn-sm px-3">
+                <i class="bi bi-arrow-left me-1"></i> Back to Analytics
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Create Job Form -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-plus-circle text-primary me-2"></i> Add New Job Role</h5>
+
+                <form method="POST" action="{{ url_for('job.create_job') }}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label fw-semibold small">Job Title *</label>
+                        <input type="text" class="form-control" id="title" name="title" placeholder="e.g. Cloud Security Engineer" required>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label for="company" class="form-label fw-semibold small">Company Name</label>
+                            <input type="text" class="form-control" id="company" name="company" value="TechCorp Innovations">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="industry" class="form-label fw-semibold small">Industry Sector</label>
+                            <input type="text" class="form-control" id="industry" name="industry" value="Software Development">
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label for="experience_level" class="form-label fw-semibold small">Experience Level</label>
+                            <input type="text" class="form-control" id="experience_level" name="experience_level" value="0-2 Years">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="salary_range" class="form-label fw-semibold small">Salary Range</label>
+                            <input type="text" class="form-control" id="salary_range" name="salary_range" value="7.0 - 11.0 LPA">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-semibold small">Detailed Job Description *</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" placeholder="Specify responsibilities, technologies, and project requirements..." required></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small d-block">Select Required Skills:</label>
+                        <div class="p-3 bg-light rounded-3 border" style="max-height: 180px; overflow-y: auto;">
+                            <div class="row g-2">
+                                {% for sk in skills %}
+                                    <div class="col-6">
+                                        <div class="form-check small">
+                                            <input class="form-check-input" type="checkbox" name="skill_ids" value="{{ sk.skill_id }}" id="sk_{{ sk.skill_id }}">
+                                            <label class="form-check-label" for="sk_{{ sk.skill_id }}">{{ sk.skill_name }}</label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold shadow-sm">
+                        <i class="bi bi-check-circle me-1"></i> Save Job Posting
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Existing Jobs List -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-list-task text-primary me-2"></i> Existing Job Listings ({{ jobs|length }})</h5>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Title</th>
+                                <th>Industry</th>
+                                <th>Skills</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for j in jobs %}
+                                <tr>
+                                    <td>
+                                        <strong class="d-block text-dark">{{ j.title }}</strong>
+                                        <small class="text-muted">{{ j.company }}</small>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border">{{ j.industry }}</span></td>
+                                    <td><span class="badge bg-primary-subtle text-primary">{{ j.job_skills|length }} skills</span></td>
+                                    <td class="text-end">
+                                        <form method="POST" action="{{ url_for('job.delete_job', job_id=j.job_id) }}" class="d-inline" onsubmit="return confirm('Delete this job posting?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Job">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

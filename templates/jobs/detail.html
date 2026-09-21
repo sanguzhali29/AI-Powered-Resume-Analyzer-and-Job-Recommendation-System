@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} - Job Details{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-3 small">
+            <li class="breadcrumb-item"><a href="{{ url_for('job.list_jobs') }}">Job Catalog</a></li>
+            <li class="breadcrumb-item active">{{ job.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Main Job Description -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mb-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle mb-1">{{ job.industry }}</span>
+                        <h2 class="fw-bold mb-1 text-dark">{{ job.title }}</h2>
+                        <h5 class="text-muted"><i class="bi bi-building me-1"></i> {{ job.company }}</h5>
+                    </div>
+                    <span class="badge bg-success fs-6 px-3 py-2 rounded-pill">{{ job.salary_range }}</span>
+                </div>
+
+                <div class="row g-3 py-3 my-2 border-top border-bottom bg-light rounded-3">
+                    <div class="col-sm-4 text-center">
+                        <small class="text-muted d-block">Experience Level</small>
+                        <span class="fw-bold text-dark">{{ job.experience_level }}</span>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <small class="text-muted d-block">Industry Sector</small>
+                        <span class="fw-bold text-dark">{{ job.industry }}</span>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <small class="text-muted d-block">Required Skills Count</small>
+                        <span class="fw-bold text-dark">{{ job.job_skills|length }} Skills</span>
+                    </div>
+                </div>
+
+                <h5 class="fw-bold mt-4 mb-2"><i class="bi bi-file-text text-primary me-2"></i> Role Description & Responsibilities</h5>
+                <p class="text-muted lh-base mb-4" style="white-space: pre-line;">{{ job.description }}</p>
+
+                <div class="d-flex gap-2 pt-3 border-top">
+                    {% if g.user and not g.user.is_admin %}
+                        <a href="{{ url_for('resume.upload_resume') }}" class="btn btn-primary btn-lg px-4 shadow-sm">
+                            <i class="bi bi-cloud-arrow-up me-2"></i> Upload Resume to Test Fit
+                        </a>
+                    {% endif %}
+                    <a href="{{ url_for('learning.learning_hub') }}" class="btn btn-outline-success btn-lg px-4">
+                        <i class="bi bi-mortarboard me-2"></i> Learn Required Skills
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar: Required Skills Breakdown -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-tags-fill text-primary me-2"></i> Skill Requirements</h5>
+                
+                <div class="d-flex flex-column gap-3">
+                    {% for js in job.job_skills %}
+                        <div class="p-3 bg-light rounded-3 border">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-bold text-dark">{{ js.skill.skill_name }}</span>
+                                <span class="badge {% if js.importance_level == 'mandatory' %}bg-danger{% elif js.importance_level == 'important' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                                    {{ js.importance_level|capitalize }}
+                                </span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center small text-muted">
+                                <span>Category: {{ js.skill.skill_category|replace('_', ' ')|capitalize }}</span>
+                                <a href="{{ url_for('learning.learning_hub', q=js.skill.skill_name) }}" class="text-success text-decoration-none">
+                                    <i class="bi bi-play-circle me-1"></i> Free Courses
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
