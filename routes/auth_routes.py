@@ -1,8 +1,8 @@
 """
 Authentication & Authorization Routes (Phase 3)
 ==============================================
-Handles user registration, login, logout, session management,
-and access control decorators.
+Handles user registration, login, logout, 1-click quick demo access,
+session management, and access control decorators.
 """
 
 from functools import wraps
@@ -21,7 +21,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if "user_id" not in session:
-            flash("Please log in to access this page.", "warning")
+            flash("Please log in or use 1-Click Demo Login to continue.", "info")
             return redirect(url_for("auth.login", next=request.url))
         return f(*args, **kwargs)
     return decorated_function
@@ -93,8 +93,16 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash("Registration successful! You can now log in.", "success")
-        return redirect(url_for("auth.login"))
+        # Auto-login after registration
+        session.clear()
+        session["user_id"] = new_user.user_id
+        session["user_name"] = new_user.full_name
+        session["user_email"] = new_user.email
+        session["user_role"] = new_user.role
+        session.permanent = True
+
+        flash(f"Welcome, {new_user.full_name}! Registration successful.", "success")
+        return redirect(url_for("resume.upload_resume"))
 
     return render_template("auth/register.html")
 
@@ -110,7 +118,6 @@ def login():
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
         password = request.form.get("password", "")
-        remember = bool(request.form.get("remember"))
 
         user = User.query.filter_by(email=email).first()
 
@@ -120,7 +127,7 @@ def login():
             session["user_name"] = user.full_name
             session["user_email"] = user.email
             session["user_role"] = user.role
-            session.permanent = remember
+            session.permanent = True  # Always remember for 90 days
 
             flash(f"Welcome back, {user.full_name}!", "success")
             
@@ -133,14 +140,61 @@ def login():
                 return redirect(url_for("dashboard.admin_dashboard"))
             return redirect(url_for("dashboard.user_dashboard"))
         else:
-            flash("Invalid email or password. Please check your credentials.", "danger")
+            flash("Invalid email or password. You can also use the 1-Click Instant Login buttons below!", "danger")
 
     return render_template("auth/login.html")
+
+
+@auth_bp.route("/quick-login/student")
+def quick_student_login():
+    """1-Click Instant Login as Student (No password typing needed)."""
+    user = User.query.filter_by(email="student@demo.com").first()
+    if not user:
+        # Fallback to first student or create one
+        user = User.query.filter_by(role="student").first()
+    if not user:
+        user = User(full_name="Aravind Kumar", email="student@demo.com", role="student")
+        user.set_password("password123")
+        db.session.add(user)
+        db.session.commit()
+
+    session.clear()
+    session["user_id"] = user.user_id
+    session["user_name"] = user.full_name
+    session["user_email"] = user.email
+    session["user_role"] = user.role
+    session.permanent = True
+
+    flash("Logged in successfully as Demo Student! (1-Click Instant Access)", "success")
+    return redirect(url_for("resume.upload_resume"))
+
+
+@auth_bp.route("/quick-login/admin")
+def quick_admin_login():
+    """1-Click Instant Login as Admin (No password typing needed)."""
+    user = User.query.filter_by(email="admin@demo.com").first()
+    if not user:
+        user = User.query.filter_by(role="admin").first()
+    if not user:
+        user = User(full_name="System Administrator", email="admin@demo.com", role="admin")
+        user.set_password("admin123")
+        db.session.add(user)
+        db.session.commit()
+
+    session.clear()
+    session["user_id"] = user.user_id
+    session["user_name"] = user.full_name
+    session["user_email"] = user.email
+    session["user_role"] = user.role
+    session.permanent = True
+
+    flash("Logged in successfully as Administrator!", "success")
+    return redirect(url_for("dashboard.admin_dashboard"))
 
 
 @auth_bp.route("/logout")
 def logout():
     """Logs the user out and clears session state."""
     session.clear()
-    flash("You have been successfully logged out.", "info")
+    flash("You have been logged out.", "info")
     return redirect(url_for("auth.login"))

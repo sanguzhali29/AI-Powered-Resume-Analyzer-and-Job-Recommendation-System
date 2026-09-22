@@ -12,15 +12,15 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     """Base application configuration."""
-    SECRET_KEY = os.environ.get("SECRET_KEY", "final-year-cse-project-secret-key-2026")
+    SECRET_KEY = os.environ.get("SECRET_KEY", "fixed-production-resume-analyzer-key-2026-persist")
     
     # Upload Settings
     UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB maximum file size limit
     ALLOWED_EXTENSIONS = {"pdf", "docx", "txt"}
     
-    # Session Settings
-    PERMANENT_SESSION_LIFETIME = timedelta(days=7)
+    # Session Settings (90 Days Persistent Cookie)
+    PERMANENT_SESSION_LIFETIME = timedelta(days=90)
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
 

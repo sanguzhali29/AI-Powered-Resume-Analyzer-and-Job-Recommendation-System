@@ -11,16 +11,36 @@
                     <div class="brand-icon bg-primary text-white d-inline-flex p-3 rounded-circle mb-2">
                         <i class="bi bi-box-arrow-in-right fs-4"></i>
                     </div>
-                    <h3 class="fw-bold">Welcome Back</h3>
-                    <p class="text-muted small">Sign in to access your resumes and recommendations</p>
+                    <h3 class="fw-bold">Sign In to Continue</h3>
+                    <p class="text-muted small">Choose instant 1-click access or enter your credentials</p>
                 </div>
 
+                <!-- 1-Click Instant Demo Access (Zero Typing) -->
+                <div class="p-3 bg-primary-subtle border border-primary-subtle rounded-4 text-center mb-4 shadow-sm">
+                    <span class="badge bg-primary px-3 py-1 mb-2 text-uppercase fw-semibold"><i class="bi bi-lightning-charge-fill me-1"></i> Quick 1-Click Access</span>
+                    <p class="small text-dark fw-medium mb-3">No password needed! Click once to enter immediately:</p>
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('auth.quick_student_login') }}" class="btn btn-primary fw-bold shadow-sm py-2">
+                            <i class="bi bi-mortarboard-fill me-1"></i> 1-Click Student Login (Upload & Scan)
+                        </a>
+                        <a href="{{ url_for('auth.quick_admin_login') }}" class="btn btn-dark fw-semibold py-2">
+                            <i class="bi bi-shield-check me-1"></i> 1-Click Admin / Recruiter Login
+                        </a>
+                    </div>
+                </div>
+
+                <div class="position-relative text-center my-3">
+                    <hr class="text-muted">
+                    <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">or sign in with email</span>
+                </div>
+
+                <!-- Standard Credentials Form -->
                 <form method="POST" action="{{ url_for('auth.login', next=request.args.get('next')) }}">
                     <div class="mb-3">
                         <label for="email" class="form-label fw-semibold small">Email Address</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required autofocus>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" value="student@demo.com" required>
                         </div>
                     </div>
 
@@ -28,47 +48,27 @@
                         <label for="password" class="form-label fw-semibold small">Password</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required>
+                            <input type="password" class="form-control" id="password" name="password" value="password123" placeholder="••••••••" required>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="remember" name="remember" checked>
-                            <label class="form-check-label small" for="remember">Remember me</label>
+                            <label class="form-check-label small text-muted" for="remember">Keep me logged in for 90 days</label>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold shadow-sm mb-3">
-                        <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                    <button type="submit" class="btn btn-outline-primary w-100 py-2 fw-semibold mb-3">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Sign In with Credentials
                     </button>
                 </form>
 
-                <!-- Demo Account Helper for Viva Presentation -->
-                <div class="p-3 bg-light rounded-3 border text-center mb-3">
-                    <small class="fw-bold d-block text-muted mb-2"><i class="bi bi-info-circle me-1"></i> Academic Demo Accounts:</small>
-                    <div class="d-flex gap-2 justify-content-center">
-                        <button type="button" class="btn btn-sm btn-outline-primary" onclick="fillDemo('student@demo.com', 'password123')">
-                            <i class="bi bi-person me-1"></i> Demo Student
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-dark" onclick="fillDemo('admin@demo.com', 'admin123')">
-                            <i class="bi bi-shield-lock me-1"></i> Demo Admin
-                        </button>
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <small class="text-muted">Don't have an account? <a href="{{ url_for('auth.register') }}" class="fw-semibold text-primary">Sign up</a></small>
+                <div class="text-center mt-3">
+                    <small class="text-muted">New user? <a href="{{ url_for('auth.register') }}" class="fw-semibold text-primary">Create an account</a></small>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-function fillDemo(email, pass) {
-    document.getElementById('email').value = email;
-    document.getElementById('password').value = pass;
-}
-</script>
 {% endblock %}
